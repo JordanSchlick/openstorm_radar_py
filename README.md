@@ -13,8 +13,8 @@ RadarDataHolder is multi threaded and asynchronous.
 ## Documentation
 See [libtest.ipynb](./libtest.ipynb) for examples. [libtest.py](./libtest.py) also has some examples but it is not commented.  
 See [__init\__.py](./__init__.py) for docmuntation of classes and methods.  
-The python api mirror the c++ one closely except for the variable naming convesion.
-[OpenSource .h files](https://github.com/JordanSchlick/OpenStorm/tree/main/Source/OpenStorm/Radar) are well documented. [RadarData.h](https://github.com/JordanSchlick/OpenStorm/tree/main/Source/OpenStorm/Radar/RadarData.h) is especially helpfully.
+The python api mirrors the c++ one closely except for the variable naming convesion.
+The [OpenStorm .h files](https://github.com/JordanSchlick/OpenStorm/tree/main/Source/OpenStorm/Radar) are well documented. [RadarData.h](https://github.com/JordanSchlick/OpenStorm/tree/main/Source/OpenStorm/Radar/RadarData.h) is especially helpfully.
 
 ## Building
 OpenStorm is a dependency and is required for building. It needs to be placed in the same directory as this module is located. Ex:  
