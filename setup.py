@@ -2,7 +2,9 @@ from distutils.core import setup, Extension
 import os
 import glob
 
-os.chdir(os.path.dirname(__file__))
+file_directory=os.path.dirname(__file__)
+if file_directory:
+    os.chdir(file_directory)
 
 sources = ['binding.cpp']
 depends = glob.glob("*.h")
