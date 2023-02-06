@@ -17,11 +17,22 @@ The python api mirrors the c++ one closely except for the variable naming conves
 The [OpenStorm .h files](https://github.com/JordanSchlick/OpenStorm/tree/main/Source/OpenStorm/Radar) are well documented. [RadarData.h](https://github.com/JordanSchlick/OpenStorm/tree/main/Source/OpenStorm/Radar/RadarData.h) is especially helpfully.
 
 ## Building
-OpenStorm is a dependency and is required for building. It needs to be placed in the same directory as this module is located. Ex:  
+The OpenStorm source code is a dependency and is required for building. The OpenStorm repository needs to be placed in the same directory as this module is located.  
+Ex:  
 ```
 Folder  
   ├OpenStorm  
   └openstorm_radar_py  
 ```
+Run `git clone https://github.com/JordanSchlick/openstorm_radar_py` and `git clone https://github.com/JordanSchlick/OpenStorm` in the same directory do download them both.  
 Your system needs to be have an environment capable of build native python modules.  
-Run `python setup.py build` to build the module.
+Run `python setup.py build` inside openstorm_radar_py to build the module.
+
+If the build completes succesfuly you should be able to import and use the module in python with `import openstorm_radar_py`  
+
+You may need to add the containing folder to your include path before you can import it depending on where it is located.
+```
+import sys
+sys.path.insert(0, './path/to/Folder')
+import openstorm_radar_py
+```
