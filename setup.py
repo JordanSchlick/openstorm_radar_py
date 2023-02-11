@@ -16,6 +16,8 @@ for root, dirs, files in os.walk("../OpenStorm/Source/OpenStorm/Radar/"):
 		if file.endswith(".cpp"):
 			#print(file_path)
 			sources.append(file_path)
+		if file.endswith(".c"):
+			sources.append(file_path)
 		if file.endswith(".h"):
 			depends.append(file_path)
 
