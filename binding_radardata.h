@@ -79,7 +79,10 @@ static PyObject* radarDataUpdateProperties(PyObject* self, PyObject* args) {
 	if (arg1==NULL) return NULL;
 	RadarData* radarData = (RadarData*)PyLong_AsVoidPtr(arg0);
 	
-	PyObject_SetAttr(arg1, PyUnicode_FromString("test_prop"), PyBool_FromLong(1));
+	//PyObject_SetAttr(arg1, PyUnicode_FromString("test_prop"), PyBool_FromLong(1));
+	PyObject_SetAttr(arg1, PyUnicode_FromString("sweep_buffer_count"), PyLong_FromLong(radarData->sweepBufferCount));
+	PyObject_SetAttr(arg1, PyUnicode_FromString("theta_buffer_count"), PyLong_FromLong(radarData->thetaBufferCount));
+	PyObject_SetAttr(arg1, PyUnicode_FromString("radius_buffer_count"), PyLong_FromLong(radarData->radiusBufferCount));
 	if(radarData->buffer != NULL){
 		
 		RadarBufferObject *radarBufferObject;
@@ -106,6 +109,8 @@ static PyObject* radarDataGetStats(PyObject* self, PyObject* args) {
 	PyObject_SetItem(statsDict, PyUnicode_FromString("min_value"), PyFloat_FromDouble(radarData->stats.minValue));
 	PyObject_SetItem(statsDict, PyUnicode_FromString("max_value"), PyFloat_FromDouble(radarData->stats.maxValue));
 	PyObject_SetItem(statsDict, PyUnicode_FromString("pixel_size"), PyFloat_FromDouble(radarData->stats.pixelSize));
+	PyObject_SetItem(statsDict, PyUnicode_FromString("begin_time"), PyFloat_FromDouble(radarData->stats.beginTime));
+	PyObject_SetItem(statsDict, PyUnicode_FromString("end_time"), PyFloat_FromDouble(radarData->stats.endTime));
 	PyObject_SetItem(statsDict, PyUnicode_FromString("no_data_value"), PyFloat_FromDouble(radarData->stats.noDataValue));
 	PyObject_SetItem(statsDict, PyUnicode_FromString("bound_radius"), PyFloat_FromDouble(radarData->stats.boundRadius));
 	PyObject_SetItem(statsDict, PyUnicode_FromString("bound_upper"), PyFloat_FromDouble(radarData->stats.boundUpper));
@@ -119,7 +124,7 @@ static PyObject* radarDataGetStats(PyObject* self, PyObject* args) {
 }
 
 
-static PyObject* radarDataGetPixelForLocation(PyObject* self, PyObject* args) {
+static PyObject* radarDataRadarSpaceForLocation(PyObject* self, PyObject* args) {
 	// radar data
 	PyObject* arg0=PyTuple_GetItem(args, 0);
 	if (arg0==NULL) return NULL;
@@ -149,9 +154,42 @@ static PyObject* radarDataGetPixelForLocation(PyObject* self, PyObject* args) {
 	
 	auto radarSpaceLocation = globe.GetPointDegrees(latitude, longitude, altitude);
 	
-	float radius = sqrt(radarSpaceLocation.x * radarSpaceLocation.x + radarSpaceLocation.y * radarSpaceLocation.y + radarSpaceLocation.z * radarSpaceLocation.z);
-	float theta = atan2(radarSpaceLocation.y, radarSpaceLocation.x);
-	float phi = acos(radarSpaceLocation.z / radius);
+	PyObject* outTuple = PyTuple_New(3);
+	PyTuple_SetItem(outTuple, 0, PyFloat_FromDouble(radarSpaceLocation.x));
+	PyTuple_SetItem(outTuple, 1, PyFloat_FromDouble(radarSpaceLocation.y));
+	PyTuple_SetItem(outTuple, 2, PyFloat_FromDouble(radarSpaceLocation.z));
+	return outTuple;
+}
+
+static PyObject* radarDataGetPixelForRadarSpace(PyObject* self, PyObject* args) {
+	
+	// radar data
+	PyObject* arg0=PyTuple_GetItem(args, 0);
+	if (arg0==NULL) return NULL;
+	RadarData* radarData = (RadarData*)PyLong_AsVoidPtr(arg0);
+	// radar space x
+	PyObject* arg1=PyTuple_GetItem(args, 1);
+	if (arg1==NULL) return NULL;
+	// radar space y
+	PyObject* arg2=PyTuple_GetItem(args, 2);
+	if (arg2==NULL) return NULL;
+	// radar space z
+	PyObject* arg3=PyTuple_GetItem(args, 3);
+	if (arg3==NULL) return NULL;
+	
+	// radar data not loaded
+	if(radarData->sweepInfo == NULL){
+		return Py_None;
+	}
+	
+	double x = PyFloat_AsDouble(arg1);
+	double y = PyFloat_AsDouble(arg2);
+	double z = PyFloat_AsDouble(arg3);
+	
+	
+	float radius = sqrt(x * x + y * y + z * z);
+	float theta = atan2(y, x);
+	float phi = acos(z / radius);
 	
 	// normalize
 	radius = radius;
@@ -206,6 +244,12 @@ static PyObject* radarDataGetPixelForLocation(PyObject* self, PyObject* args) {
 	PyObject_SetItem(outDict, PyUnicode_FromString("pixel_radius_length"), PyFloat_FromDouble(radarData->stats.pixelSize));
 	// approximate width of the pixel along the theta in meters
 	PyObject_SetItem(outDict, PyUnicode_FromString("pixel_theta_width"), PyFloat_FromDouble(pixelThetaWidth));
+	
+	if(isInVolume && radarData->buffer != NULL){
+		float value = radarData->buffer[(int)phi * radarData->sweepBufferSize + ((int)theta + 1) * radarData->thetaBufferSize + (int)radius];
+		// value of pixel
+		PyObject_SetItem(outDict, PyUnicode_FromString("value"), PyFloat_FromDouble(value));
+	}
 	
 	return outDict;
 }

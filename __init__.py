@@ -88,9 +88,21 @@ class RadarData:
 		Gets the position in the buffer from world coordinates. 
 		If is_in_volume is true, the floor of the outputs will get the pixel that the coordinates are located in.
 		Theta does not take into account padding rays so if you have not removed them you will need to add 1 to it to get the correct pixel.
-		Returns a dictionary with data
+		Returns a dictionary with data about the pixel at the specified location
 		"""
-		return native_module.radarDataGetPixelForLocation(self._ptr, latitude, longitude, altitude)
+		radarSpace = native_module.radarDataRadarSpaceForLocation(self._ptr, latitude, longitude, altitude)
+		return native_module.radarDataGetPixelForRadarSpace(self._ptr, radarSpace[0], radarSpace[1], radarSpace[2])
+	
+	def get_radar_space_for_location(self, latitude, longitude, altitude=0):
+		"""
+		Returns a tuple containing the xyz coordinates in meters in cartesian space centered on the radar
+		positive x is eastward, positive Y is southward, positive z is up
+		"""
+		return native_module.radarDataRadarSpaceForLocation(self._ptr, latitude, longitude, altitude)
+	
+	def get_pixel_for_radar_space(self, x, y, z):
+		"""Returns a dictionary with data about the pixel at the specified location"""
+		return native_module.radarDataGetPixelForRadarSpace(self._ptr, x, y, z)
 
 
 
