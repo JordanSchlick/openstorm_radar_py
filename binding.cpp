@@ -6,6 +6,7 @@
 
 #include "binding_radardata.h"
 #include "binding_radardataholder.h"
+#include "binding_other.h"
 
 
 
@@ -31,8 +32,9 @@ static PyMethodDef pyMethods[] = {
 	{"radarDataHolderProductIsLoaded",  radarDataHolderProductIsLoaded, METH_VARARGS, ""},
 	{"radarDataHolderProductStartUsing",  radarDataHolderProductStartUsing, METH_VARARGS, ""},
 	{"radarDataHolderProductStopUsing",  radarDataHolderProductStopUsing, METH_VARARGS, ""},
-	//{"recover",  recover, METH_VARARGS, "Do stuff."},
-	//{"stft",  stftFunc, METH_VARARGS, "Do stuff."},
+	
+	{"recompressNexradArchive",  recompressNexradArchive, METH_VARARGS, ""},
+	
 	{NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

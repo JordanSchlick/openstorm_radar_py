@@ -184,3 +184,6 @@ class RadarDataHolderProduct:
 		return native_module.radarDataHolderProductIsLoaded(self._ptr)
 		
 
+def recompress_nexrad_archive(in_file_name, out_file_name):
+	"""recompress a radar archive with gzip"""
+	return native_module.recompressNexradArchive(in_file_name, out_file_name)
