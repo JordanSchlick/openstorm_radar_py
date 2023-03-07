@@ -124,6 +124,25 @@ static PyObject* radarDataGetStats(PyObject* self, PyObject* args) {
 }
 
 
+static PyObject* radarDataGetSweepInfo(PyObject* self, PyObject* args) {
+	// radar data
+	PyObject* arg0=PyTuple_GetItem(args, 0);
+	if (arg0==NULL) return NULL;
+	RadarData* radarData = (RadarData*)PyLong_AsVoidPtr(arg0);
+	
+	PyObject* sweepInfoList = PyList_New(0);
+	if(radarData->sweepInfo != NULL){
+		for(int i = 0; i < radarData->sweepBufferCount; i++){
+			PyObject* info = PyDict_New();
+			PyObject_SetItem(info, PyUnicode_FromString("elevation"), PyFloat_FromDouble(radarData->sweepInfo[i].elevation));
+			PyObject_SetItem(info, PyUnicode_FromString("id"), PyLong_FromLong(radarData->sweepInfo[i].id));
+			PyObject_SetItem(info, PyUnicode_FromString("actual_ray_count"), PyLong_FromLong(radarData->sweepInfo[i].actualRayCount));
+			PyList_Append(sweepInfoList, info);
+		}
+	}
+	return sweepInfoList;
+}
+
 static PyObject* radarDataRadarSpaceForLocation(PyObject* self, PyObject* args) {
 	// radar data
 	PyObject* arg0=PyTuple_GetItem(args, 0);

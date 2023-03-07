@@ -19,6 +19,7 @@ static PyMethodDef pyMethods[] = {
 	{"radarDataLoadFile",  radarDataLoadFile, METH_VARARGS, ""},
 	{"radarDataUpdateProperties",  radarDataUpdateProperties, METH_VARARGS, ""},
 	{"radarDataGetStats",  radarDataGetStats, METH_VARARGS, ""},
+	{"radarDataGetSweepInfo",  radarDataGetSweepInfo, METH_VARARGS, ""},
 	{"radarDataRadarSpaceForLocation",  radarDataRadarSpaceForLocation, METH_VARARGS, ""},
 	{"radarDataGetPixelForRadarSpace",  radarDataGetPixelForRadarSpace, METH_VARARGS, ""},
 	

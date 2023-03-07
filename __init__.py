@@ -30,13 +30,17 @@ native_module = module_from_file("openstorm_radar_native",native_path)
 #import openstorm_radar_native as native_module
 
 class VolumeTypes:
+	VOLUME_NONE = -1
 	VOLUME_UNKNOWN = 0
-		
+	
 	# raw volume types
 	
 	VOLUME_REFLECTIVITY = 1
 	VOLUME_VELOCITY = 2
 	VOLUME_SPECTRUM_WIDTH = 3
+	VOLUME_CORELATION_COEFFICIENT = 4
+	VOLUME_DIFFERENTIAL_REFLECTIVITY = 5
+	VOLUME_DIFFERENTIAL_PHASE_SHIFT = 6
 	
 	# computed volume types
 	
@@ -82,6 +86,10 @@ class RadarData:
 	def get_stats(self):
 		"""get info about the currently loaded radar volume"""
 		return native_module.radarDataGetStats(self._ptr)
+	
+	def get_sweep_info(self):
+		"""get info about the sweeps in currently loaded radar volume"""
+		return native_module.radarDataGetSweepInfo(self._ptr)
 	
 	def get_pixel_for_location(self, latitude, longitude, altitude=0):
 		"""
