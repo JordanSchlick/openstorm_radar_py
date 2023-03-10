@@ -230,7 +230,7 @@ static PyObject* radarDataGetPixelForRadarSpace(PyObject* self, PyObject* args) 
 			lastIndex = std::max(lastIndex, sweepIndex);
 		}
 	}
-	fprintf(stderr, "phi %f %f %f\n",phi, radarData->sweepInfo[firstIndex].elevation, radarData->sweepInfo[lastIndex].elevation);
+	//fprintf(stderr, "phi %f %f %f\n",phi, radarData->sweepInfo[firstIndex].elevation, radarData->sweepInfo[lastIndex].elevation);
 	if(phi < radarData->sweepInfo[firstIndex].elevation){
 		phi = -INFINITY;
 	}else if (phi > radarData->sweepInfo[lastIndex].elevation){
