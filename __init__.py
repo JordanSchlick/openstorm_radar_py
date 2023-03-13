@@ -73,9 +73,10 @@ class RadarData:
 		if self.auto_free:
 			native_module.radarDataDeallocate(self._ptr)
 	
-	def load_nexrad_file(self, fileName, volume_type):
+	def load_nexrad_file(self, file_name, volume_type):
 		"""load a nexrad file from disk into buffer"""
-		native_module.radarDataLoadFile(self._ptr, fileName, volume_type)
+		self.file_name = file_name
+		native_module.radarDataLoadFile(self._ptr, file_name, volume_type)
 		self._update_properties()
 	
 	
@@ -141,6 +142,7 @@ class RadarDataHolder:
 		load a file or load new products if file_name is not specified
 		this will keep existing data so call unload if changing files
 		"""
+		self.file_name = file_name
 		if file_name is None:
 			native_module.radarDataHolderLoad(self._ptr)
 		else:

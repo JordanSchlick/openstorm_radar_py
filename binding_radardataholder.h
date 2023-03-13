@@ -10,9 +10,11 @@ static PyObject* radarDataHolderAllocate(PyObject* self, PyObject* args) {
 
 static PyObject* radarDataHolderDeallocate(PyObject* self, PyObject* args) {
 	PyObject* arg0=PyTuple_GetItem(args, 0);
-	if (arg0==NULL)
-		return NULL;
-	delete (RadarDataHolder*)PyLong_AsVoidPtr(arg0);
+	if (arg0==NULL) return NULL;
+	RadarDataHolder* radarDataHolder = (RadarDataHolder*)PyLong_AsVoidPtr(arg0);
+	Py_BEGIN_ALLOW_THREADS
+	delete radarDataHolder;
+	Py_END_ALLOW_THREADS
 	return PyBool_FromLong(1);
 }
 
@@ -28,9 +30,13 @@ static PyObject* radarDataHolderLoad(PyObject* self, PyObject* args) {
 	if(arg1 != NULL){
 		RadarFile file = {};
 		file.path = std::string(PyUnicode_AsUTF8(arg1));
+		Py_BEGIN_ALLOW_THREADS
 		radarDataHolder->Load(file);
+		Py_END_ALLOW_THREADS
 	}else{
+		Py_BEGIN_ALLOW_THREADS
 		radarDataHolder->Load();
+		Py_END_ALLOW_THREADS
 	}
 	
 	return PyBool_FromLong(1);
@@ -41,7 +47,9 @@ static PyObject* radarDataHolderUnload(PyObject* self, PyObject* args) {
 	PyObject* arg0=PyTuple_GetItem(args, 0);
 	if (arg0==NULL) return NULL;
 	RadarDataHolder* radarDataHolder = (RadarDataHolder*)PyLong_AsVoidPtr(arg0);
+	Py_BEGIN_ALLOW_THREADS
 	radarDataHolder->Unload();
+	Py_END_ALLOW_THREADS
 	return PyBool_FromLong(1);
 }
 
@@ -71,9 +79,11 @@ static PyObject* radarDataHolderProductGetRadarData(PyObject* self, PyObject* ar
 	PyObject* arg0=PyTuple_GetItem(args, 0);
 	if (arg0==NULL) return NULL;
 	RadarDataHolder::ProductHolder* radarDataHolderProduct = (RadarDataHolder::ProductHolder*)PyLong_AsVoidPtr(arg0);
+	Py_BEGIN_ALLOW_THREADS
 	if(radarDataHolderProduct->radarData != NULL){
 		radarDataHolderProduct->radarData->Decompress();
 	}
+	Py_END_ALLOW_THREADS
 	return PyLong_FromVoidPtr(radarDataHolderProduct->radarData);
 }
 
