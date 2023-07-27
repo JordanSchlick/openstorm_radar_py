@@ -5,7 +5,10 @@ import numpy as np
 sys.path.insert(0, os.path.join(os.path.dirname(__file__),'../'))
 import openstorm_radar_py
 
-os.chdir(os.path.dirname(__file__))
+try:
+	os.chdir(os.path.dirname(__file__))
+except:
+	pass
 
 print(openstorm_radar_py.native_path)
 #print(openstorm_radar_py.native_module.test())
@@ -17,7 +20,7 @@ print(radar_data._ptr)
 radar_data.load_nexrad_file("../OpenStorm/Content/Data/Demo/KMKX_20220723_235820", openstorm_radar_py.VolumeTypes.VOLUME_REFLECTIVITY)
 
 print(radar_data.get_stats())
-print(radar_data.test_prop)
+# print(radar_data.test_prop)
 print(radar_data.buffer)
 print(np.array(radar_data.buffer)[0])
 print(np.array(radar_data.buffer)[0,0,0],np.array(radar_data.buffer)[0,0,0],np.array(radar_data.buffer)[0,0,0],np.array(radar_data.buffer)[0,0,0],np.array(radar_data.buffer)[0,0,0])
@@ -27,8 +30,8 @@ print(np.array(radar_data.buffer).shape)
 radar_data_holder = openstorm_radar_py.RadarDataHolder()
 reflectivity_product = radar_data_holder.get_product(openstorm_radar_py.VolumeTypes.VOLUME_REFLECTIVITY)
 rotation_product = radar_data_holder.get_product(openstorm_radar_py.VolumeTypes.VOLUME_ROTATION)
-radar_data_holder.load("../OpenStorm/Content/Data/Demo/KTLX20130531_231434_V06")
 srv_product = radar_data_holder.get_product(openstorm_radar_py.VolumeTypes.VOLUME_STORM_RELATIVE_VELOCITY)
+radar_data_holder.load("../OpenStorm/Content/Data/Demo/KTLX20130531_231434_V06")
 print(radar_data_holder.get_state())
 while(radar_data_holder.get_state() == openstorm_radar_py.RadarDataHolder.DataStateLoading):
 	print("loading...", end='\r')

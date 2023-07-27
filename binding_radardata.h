@@ -134,7 +134,7 @@ static PyObject* radarDataGetSweepInfo(PyObject* self, PyObject* args) {
 	if(radarData->sweepInfo != NULL){
 		for(int i = 0; i < radarData->sweepBufferCount; i++){
 			PyObject* info = PyDict_New();
-			PyObject_SetItem(info, PyUnicode_FromString("elevation"), PyFloat_FromDouble(radarData->sweepInfo[i].elevation));
+			PyObject_SetItem(info, PyUnicode_FromString("elevation"), PyFloat_FromDouble(radarData->sweepInfo[i].elevationAngle));
 			PyObject_SetItem(info, PyUnicode_FromString("id"), PyLong_FromLong(radarData->sweepInfo[i].id));
 			PyObject_SetItem(info, PyUnicode_FromString("actual_ray_count"), PyLong_FromLong(radarData->sweepInfo[i].actualRayCount));
 			PyList_Append(sweepInfoList, info);
@@ -230,18 +230,18 @@ static PyObject* radarDataGetPixelForRadarSpace(PyObject* self, PyObject* args) 
 			lastIndex = std::max(lastIndex, sweepIndex);
 		}
 	}
-	//fprintf(stderr, "phi %f %f %f\n",phi, radarData->sweepInfo[firstIndex].elevation, radarData->sweepInfo[lastIndex].elevation);
-	if(phi < radarData->sweepInfo[firstIndex].elevation){
+	//fprintf(stderr, "phi %f %f %f\n",phi, radarData->sweepInfo[firstIndex].elevationAngle, radarData->sweepInfo[lastIndex].elevationAngle);
+	if(phi < radarData->sweepInfo[firstIndex].elevationAngle){
 		phi = -INFINITY;
-	}else if (phi > radarData->sweepInfo[lastIndex].elevation){
+	}else if (phi > radarData->sweepInfo[lastIndex].elevationAngle){
 		phi = INFINITY;
 	}else{
 		for (int sweepIndex = firstIndex + 1; sweepIndex < radarData->sweepBufferCount; sweepIndex++) {
 			RadarData::SweepInfo &info2 = radarData->sweepInfo[sweepIndex];
-			if(phi <= info2.elevation){
+			if(phi <= info2.elevationAngle){
 				RadarData::SweepInfo &info1 = radarData->sweepInfo[sweepIndex - 1];
 				// set phi to sweep index
-				phi = (phi - info1.elevation) / (info2.elevation - info1.elevation) + 0.5f + sweepIndex;
+				phi = (phi - info1.elevationAngle) / (info2.elevationAngle - info1.elevationAngle) + 0.5f + sweepIndex;
 				break;
 			}
 		}
