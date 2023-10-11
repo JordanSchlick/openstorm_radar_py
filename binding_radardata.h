@@ -136,6 +136,7 @@ static PyObject* radarDataGetSweepInfo(PyObject* self, PyObject* args) {
 			PyObject* info = PyDict_New();
 			PyObject_SetItem(info, PyUnicode_FromString("elevation"), PyFloat_FromDouble(radarData->sweepInfo[i].elevationAngle));
 			PyObject_SetItem(info, PyUnicode_FromString("id"), PyLong_FromLong(radarData->sweepInfo[i].id));
+			PyObject_SetItem(info, PyUnicode_FromString("index"), PyLong_FromLong(radarData->sweepInfo[i].index));
 			PyObject_SetItem(info, PyUnicode_FromString("actual_ray_count"), PyLong_FromLong(radarData->sweepInfo[i].actualRayCount));
 			PyList_Append(sweepInfoList, info);
 		}
