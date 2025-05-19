@@ -31,7 +31,7 @@ radar_data_holder = openstorm_radar_py.RadarDataHolder()
 reflectivity_product = radar_data_holder.get_product(openstorm_radar_py.VolumeTypes.VOLUME_REFLECTIVITY)
 rotation_product = radar_data_holder.get_product(openstorm_radar_py.VolumeTypes.VOLUME_ROTATION)
 srv_product = radar_data_holder.get_product(openstorm_radar_py.VolumeTypes.VOLUME_STORM_RELATIVE_VELOCITY)
-radar_data_holder.load("../OpenStorm/Content/Data/Demo/KTLX20130531_231434_V06")
+radar_data_holder.load("../OpenStorm/Content/Data/Demo/KTLX20130531_231434_V06.gz")
 print(radar_data_holder.get_state())
 while(radar_data_holder.get_state() == openstorm_radar_py.RadarDataHolder.DataStateLoading):
 	print("loading...", end='\r')

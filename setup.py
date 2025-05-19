@@ -13,6 +13,10 @@ depends = glob.glob("*.h")
 for root, dirs, files in os.walk("../OpenStorm/Source/OpenStorm/Radar/"):
 	for file in files:
 		file_path = os.path.join(root, file)
+		if os.name == 'nt' and ("Deps/hdf5" in file_path or "Deps\\hdf5" in file_path):
+			# exclude hdf5 on windows, because it blows past the 32767 character limit on command lines for the linker
+			# damn you windows...
+			continue
 		if file.endswith(".cpp"):
 			#print(file_path)
 			sources.append(file_path)

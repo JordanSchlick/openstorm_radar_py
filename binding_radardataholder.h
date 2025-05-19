@@ -26,6 +26,7 @@ static PyObject* radarDataHolderLoad(PyObject* self, PyObject* args) {
 	if (arg0==NULL) return NULL;
 	// file name (optional)
 	PyObject* arg1=PyTuple_GetItem(args, 1);
+	PyErr_Clear(); // clear error from failed GetItem
 	RadarDataHolder* radarDataHolder = (RadarDataHolder*)PyLong_AsVoidPtr(arg0);
 	if(arg1 != NULL){
 		RadarFile file = {};
