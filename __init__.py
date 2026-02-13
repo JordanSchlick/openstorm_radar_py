@@ -1,6 +1,5 @@
 import sys
 import os
-import numpy as np
 import importlib.util
 import ctypes
 from enum import Enum
@@ -15,18 +14,18 @@ if True:
 			#print(os.path.join(buildDir,dir))
 			sys.path.insert(1, os.path.join(buildDir,dir))
 			files = os.listdir(os.path.join(buildDir,dir))
-			if native_path == "" or dir.find(str(sys.version_info.major) + "." + str(sys.version_info.minor)) > 0:
+			if native_path == "" or dir.find(str(sys.version_info.major) + "" + str(sys.version_info.minor)) > 0:
 				native_path = os.path.join(buildDir,dir,files[0])
 				
 	#sys.path.insert(1, os.path.join(os.path.dirname(__file__),'build/lib.win-amd64-3.7'))
-
+# print(native_path)
 def module_from_file(module_name, file_path):
 	spec = importlib.util.spec_from_file_location(module_name, file_path)
 	module = importlib.util.module_from_spec(spec)
 	spec.loader.exec_module(module)
 	return module
 native_module = module_from_file("openstorm_radar_native",native_path)
-#print(nativeModule)
+# print(native_module)
 #import openstorm_radar_native as native_module
 
 class VolumeTypes:

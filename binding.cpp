@@ -39,13 +39,46 @@ static PyMethodDef pyMethods[] = {
 	{NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
+static int moduleExec(PyObject *module) {
+	// Populate module with functions, constants, etc.
+	PyModule_AddFunctions(module, pyMethods);
+	
+	RadarBufferObject_Type.tp_name = "openstorm_radar_native.RadarBufferType";
+	RadarBufferObject_Type.tp_basicsize = sizeof(RadarBufferObject);
+	RadarBufferObject_Type.tp_doc = PyDoc_STR("Radar Buffer Data");
+	RadarBufferObject_Type.tp_new = PyType_GenericNew;
+	RadarBufferObject_Type.tp_as_buffer = &RadarBuffer_BufferProcs;
+	RadarBufferObject_Type.tp_itemsize = 0;
+	//RadarBufferObject_Type.tp_dealloc = (destructor)myobj_dealloc,
+	//RadarBufferObject_Type.tp_repr = (reprfunc)myobj_repr,
+	RadarBufferObject_Type.tp_flags = Py_TPFLAGS_DEFAULT;
+	
+	if (PyType_Ready(&RadarBufferObject_Type) < 0)
+		return NULL;
+	
+	if(PyModule_AddObjectRef(module, "RadarBufferType", (PyObject *) &RadarBufferObject_Type) < 0) {
+		return NULL;
+	}
+	return 0; // Success
+}
+
+static PyModuleDef_Slot moduleSlots[] = {
+	{Py_mod_exec, moduleExec},
+	{Py_mod_gil, Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
+	{0, NULL} // Sentinel
+};
+
 static struct PyModuleDef pyModule = {
 	PyModuleDef_HEAD_INIT,
 	"openstorm_radar_native",   /* name of module */
-	"", /* module documentation, may be NULL */
-	-1,       /* size of per-interpreter state of the module,
-				 or -1 if the module keeps state in global variables. */
-	pyMethods
+	NULL, /* module documentation, may be NULL */
+	0,       /* size of per-interpreter state of the module,
+				or -1 if the module keeps state in global variables. */
+	NULL, // Methods
+	moduleSlots, // Slots
+	NULL, // Traverse
+	NULL, // Clear
+	NULL, // Free
 };
 
 
@@ -53,38 +86,24 @@ static struct PyModuleDef pyModule = {
 PyMODINIT_FUNC
 PyInit_openstorm_radar_native(void)
 {
+	
 	//printf("Initialized\n");
-	Py_Initialize();
-	
-	
+	// Py_Initialize();
 	
 	
 	PyObject* m;
-	m = PyModule_Create(&pyModule);
+	// m = PyModule_Create(&pyModule);
+	m = PyModuleDef_Init(&pyModule);
 	if (m == NULL)
 		return NULL;
 	
 	
-	RadarBufferObject_Type.tp_name = "openstorm_radar_native.RadarBufferType";
-	RadarBufferObject_Type.tp_basicsize = sizeof(RadarBufferObject);
-	RadarBufferObject_Type.tp_doc = PyDoc_STR("Radar Buffer Data");
-	RadarBufferObject_Type.tp_new = PyType_GenericNew,
-	RadarBufferObject_Type.tp_as_buffer = &RadarBuffer_BufferProcs;
-    RadarBufferObject_Type.tp_itemsize = 0;
-	//RadarBufferObject_Type.tp_dealloc = (destructor)myobj_dealloc,
-	//RadarBufferObject_Type.tp_repr = (reprfunc)myobj_repr,
-	RadarBufferObject_Type.tp_flags = Py_TPFLAGS_DEFAULT;
-	
-    if (PyType_Ready(&RadarBufferObject_Type) < 0)
-        return NULL;
-	
-	Py_INCREF(&RadarBufferObject_Type);
-    if (PyModule_AddObject(m, "RadarBufferType", (PyObject *) &RadarBufferObject_Type) < 0) {
-        Py_DECREF(&RadarBufferObject_Type);
-        Py_DECREF(m);
-        return NULL;
-    }
-	
+	// Py_INCREF(&RadarBufferObject_Type);
+	// if (PyModule_AddObject(m, "RadarBufferType", (PyObject *) &RadarBufferObject_Type) < 0) {
+	//     Py_DECREF(&RadarBufferObject_Type);
+	//     Py_DECREF(m);
+	//     return NULL;
+	// }
 	
 	return m;
 }

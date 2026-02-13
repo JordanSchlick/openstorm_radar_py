@@ -36,3 +36,12 @@ import sys
 sys.path.insert(0, './path/to/Folder')
 import openstorm_radar_py
 ```
+
+
+## GDB
+Debugging within a venv on windows requires settings a specific environment variable and then launching the system executable directly.
+```batch
+set __PYVENV_LAUNCHER__=C:\Users\Admin\.virtualenvs\torch-env\Scripts\python.exe
+gdb "/cygdrive/c\Program Files\Python314\python3.14t.exe"
+(gdb) run libtest.py
+```

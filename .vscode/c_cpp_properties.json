@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\Program Files\\Python37\\include"
+                "C:\\Program Files\\Python37\\include",
+                "C:\\Program Files\\Python314\\include"
             ],
             "defines": [
                 "_DEBUG",

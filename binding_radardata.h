@@ -275,7 +275,9 @@ static PyObject* radarDataGetPixelForRadarSpace(PyObject* self, PyObject* args) 
 }
 
 int radarBufferObjectGetBuffer(PyObject* exporter, Py_buffer* view, int flags){
-	
+	if(!view || !exporter){
+		return -1;
+	}
 	Py_buffer* bufferObj = view;//new Py_buffer();
 	RadarBufferObject *radarBufferObject = (RadarBufferObject *)exporter;
 	RadarData* radarData = radarBufferObject->radarData;
@@ -288,7 +290,8 @@ int radarBufferObjectGetBuffer(PyObject* exporter, Py_buffer* view, int flags){
 		return -1;
 	}
 	bufferObj->obj = exporter;
-	bufferObj->obj->ob_refcnt++;
+	// bufferObj->obj->ob_refcnt++;
+	Py_INCREF(bufferObj->obj);
 	// skip padding rays
 	bufferObj->buf = radarData->buffer;
 	bufferObj->len = radarData->fullBufferSize * sizeof(float);
@@ -309,6 +312,9 @@ int radarBufferObjectGetBuffer(PyObject* exporter, Py_buffer* view, int flags){
 	return 0;
 }
 void radarBufferObjectBufferFree(PyObject* exporter, Py_buffer* view){
+	if(!view){
+		return;
+	}
 	delete view->shape;
 	delete view->strides;
 }
