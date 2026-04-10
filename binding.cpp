@@ -64,7 +64,9 @@ static int moduleExec(PyObject *module) {
 
 static PyModuleDef_Slot moduleSlots[] = {
 	{Py_mod_exec, moduleExec},
+	#ifdef POSSIBLY_FREE_THREADED
 	{Py_mod_gil, Py_MOD_PER_INTERPRETER_GIL_SUPPORTED},
+	#endif
 	{0, NULL} // Sentinel
 };
 

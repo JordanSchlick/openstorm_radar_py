@@ -1,5 +1,6 @@
 from distutils.core import setup, Extension
 import os
+import sys
 import glob
 
 file_directory=os.path.dirname(__file__)
@@ -25,8 +26,12 @@ for root, dirs, files in os.walk("../OpenStorm/Source/OpenStorm/Radar/"):
 		if file.endswith(".h"):
 			depends.append(file_path)
 
+define_macros = []
+if sys.version_info.major == 3 and sys.version_info.minor >= 13:
+	define_macros.append(('POSSIBLY_FREE_THREADED', 1))
+	
 
-mymodule = Extension('openstorm_radar_native', sources, depends=depends)
+mymodule = Extension('openstorm_radar_native', sources, depends=depends, define_macros=define_macros)
 
 setup(
 	name        = 'openstorm_radar_native',

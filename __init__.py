@@ -5,6 +5,7 @@ import ctypes
 from enum import Enum
 
 native_path = ""
+is_free_threaded = sys.version_info >= (3, 13) and sys._is_gil_enabled() == False
 if True:
 	buildDir = os.path.join(os.path.dirname(__file__),'build')
 	outputDirs = os.listdir(buildDir)
@@ -14,7 +15,7 @@ if True:
 			#print(os.path.join(buildDir,dir))
 			sys.path.insert(1, os.path.join(buildDir,dir))
 			files = os.listdir(os.path.join(buildDir,dir))
-			if native_path == "" or dir.find(str(sys.version_info.major) + "" + str(sys.version_info.minor)) > 0:
+			if native_path == "" or (dir.find(str(sys.version_info.major) + "" + str(sys.version_info.minor)) > 0 and (dir[-1] == "t" or not is_free_threaded)):
 				native_path = os.path.join(buildDir,dir,files[0])
 				
 	#sys.path.insert(1, os.path.join(os.path.dirname(__file__),'build/lib.win-amd64-3.7'))
